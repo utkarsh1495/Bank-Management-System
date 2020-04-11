@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const employeeSchema = mongoose.Schema({
     username:{
@@ -10,11 +11,28 @@ const employeeSchema = mongoose.Schema({
     password:{
         type: String,
         required: true
-    }
+    },
+    tokens:[{
+        token:{
+            type:String,
+            required:true
+        }
+    }]
 })
 
+//Instance method
+employeeSchema.methods.generateAuthToken = async function (){
+    const employee = this
+    const token = jwt.sign({ _id: employee._id.toString()},'thisismyfirstnodeapp')
+
+    employee.tokens = employee.tokens.concat({token})
+    await employee.save()
+    return token
+}
+
+//Model method
 employeeSchema.statics.findByCredentials = async (username, password)=>{
-    const employee = await Employee.findOne(username)
+    const employee = await Employee.findOne({username})
 
     if(!employee){
         throw new Error('Unable to login!')
