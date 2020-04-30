@@ -44,7 +44,7 @@ router.patch('/account/debit/:id', async (req,res)=>{
         if(account){
             const depositLeft = account.deposit - req.body.amount
             if(depositLeft>0){
-                account[deposit] = depositLeft
+                account["deposit"] = depositLeft
                 await account.save()
                 res.send(account)
             } else{
@@ -63,7 +63,7 @@ router.patch('/account/credit/:id', async (req,res)=>{
         const account = await Account.findById({_id:req.params.id})
         if(account){
             const accountBalance = account.deposit + req.body.amount
-            account[deposit] = accountBalance
+            account["deposit"] = accountBalance
             await account.save()
             res.send(account)
         }else{
