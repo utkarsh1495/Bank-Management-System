@@ -2,12 +2,17 @@ const express = require('express')
 //This is required for starting MongoDB
 require('./db/mongoose')
 const app = express()
+const cors = require('cors')
 //Hiroku can also be tried
 const port = 3000
 const accountsRouter = require('../src/router/account')
 const employeeRouter = require('./router/employee')
 
 //Parse incoming request from json
+var corsOptions = {
+    origin: '*',
+}
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(accountsRouter)
 app.use(employeeRouter)
