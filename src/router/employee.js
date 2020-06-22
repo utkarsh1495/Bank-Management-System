@@ -2,6 +2,7 @@ const express = require('express')
 const router = new express.Router()
 const bcrypt = require('bcryptjs')
 const Employee = require('../models/employee')
+const auth = require('../middleware/auth')
 
 router.post('/employee/login', async(req,res)=>{
     try{
@@ -14,6 +15,34 @@ router.post('/employee/login', async(req,res)=>{
     }catch(e){
         res.status(400).send('Login Unsuccessful!')
     }
+})
+
+router.post('/employee/logout', auth,async(req,res)=>{
+    try{
+        req.user.tokens = req.user.tokens.filter((token)=>{
+            return token.token !== req.token
+        })
+        await req.user.save()
+
+        res.status(200).send('Logout Successful!')
+    }
+    catch(e){
+        res.status(500).send()
+    }
+})
+
+router.post('/employee/logout/all', auth, async(req,res)=>{
+    try{
+        req.user.tokens = [];
+
+        await req.user.save()
+
+        res.status(200).send('Logged out all the sessions!')
+    }
+    catch(e){
+        res.status(500).send()
+    }
+    
 })
 
 router.post('/employee', async(req,res)=>{
