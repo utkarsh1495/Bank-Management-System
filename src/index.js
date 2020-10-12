@@ -4,7 +4,7 @@ require('./db/mongoose')
 const app = express()
 const cors = require('cors')
 //Hiroku can also be tried
-const port = 3001
+const port = 3000
 const accountsRouter = require('../src/router/account')
 const employeeRouter = require('./router/employee')
 
@@ -17,7 +17,7 @@ app.use(express.json())
 app.use(accountsRouter)
 app.use(employeeRouter)
 
-app.listen(port, ()=>{
+app.listen(process.env.PORT || port, ()=>{
     console.log('server is up on port', port)
 })
 
